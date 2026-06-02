@@ -64,4 +64,16 @@ exports.findUsers = async () => {
   return users;
 };
 
-exports.loginUserAndFindCardnumber = async ({ username, password }) => {};
+exports.loginUserAndFindCardnumber = async (username) => {
+  const connection = await db.getConnection();
+
+  const findQuery = "select * from users where username = ?";
+
+  const [user] = await connection.execute(findQuery, [username]);
+
+  const cardnumberQuery = "select * from accounts where user_id = ?";
+
+  const [account] = await connection.execute(cardnumberQuery, [user[0].id]);
+
+  return account[0].cardnuber;
+};

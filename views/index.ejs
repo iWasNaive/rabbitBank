@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Mobile Banking</title>
+
+    <!-- فونت فارسی Vazirmatn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Vazirmatn", sans-serif;
+      }
+
+      body {
+        background: #f4f6f8;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 40px 15px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 430px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .header h2 {
+        font-size: 26px;
+        color: #111827;
+      }
+
+      .header p {
+        color: #6b7280;
+        margin-top: 6px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+      }
+
+      .large {
+        grid-column: span 2;
+      }
+
+      .tall {
+        min-height: 170px;
+      }
+
+      .balance {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: white;
+      }
+
+      .balance span {
+        font-size: 13px;
+        opacity: 0.8;
+      }
+
+      .balance h1 {
+        margin-top: 10px;
+        font-size: 30px;
+      }
+
+      .bank-card {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+      }
+
+      .bank-card .number {
+        margin-top: 35px;
+        letter-spacing: 2px;
+        font-size: 18px;
+      }
+
+      .title {
+        color: #6b7280;
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+
+      .value {
+        font-size: 22px;
+        font-weight: bold;
+        color: #111827;
+      }
+
+      .transaction {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      .income {
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .expense {
+        color: #ef4444;
+        font-weight: bold;
+      }
+
+      .transfer-btn {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 20px;
+        background: #111827;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .transfer-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .quick {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .quick-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 18px;
+        background: #f3f4f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid #d1d5db;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>سلام، سید 👋</h2>
+        <p>به موبایل بانک خوش اومدی</p>
+      </div>
+
+      <div class="grid">
+        <!-- موجودی -->
+        <div class="card balance large">
+          <span>موجودی حساب</span>
+          <h1>۱۲۵,۴۵۰,۰۰۰ تومان</h1>
+        </div>
+
+        <!-- کارت بانکی -->
+        <div class="card bank-card large">
+          <div>Rabbit Bank</div>
+          <div class="number">6037 •••• •••• 9876</div>
+          <div style="margin-top: 10px; font-size: 16px">Seyed Hosseini</div>
+        </div>
+
+        <!-- انتقال وجه با فرم -->
+        <div class="card large">
+          <div class="title">انتقال وجه</div>
+          <form id="transferForm">
+            <input type="text" placeholder="شماره کارت مقصد" required />
+            <input type="number" placeholder="مبلغ (تومان)" required />
+            <button type="submit" class="transfer-btn">انتقال</button>
+          </form>
+        </div>
+
+        <!-- دریافتی -->
+        <div class="card">
+          <div class="title">دریافتی امروز</div>
+          <div class="value income">+۲,۳۵۰,۰۰۰</div>
+        </div>
+
+        <!-- پرداختی -->
+        <div class="card">
+          <div class="title">پرداختی امروز</div>
+          <div class="value expense">-۸۵۰,۰۰۰</div>
+        </div>
+
+        <!-- سطح حساب -->
+        <div class="card">
+          <div class="title">سطح حساب</div>
+          <div class="value">✨ طلایی</div>
+        </div>
+
+        <!-- صاحب حساب -->
+        <div class="card">
+          <div class="title">صاحب حساب</div>
+          <div class="value">سید حسینی</div>
+        </div>
+
+        <!-- آخرین تراکنش‌ها -->
+        <div class="card large">
+          <div class="title">آخرین تراکنش‌ها</div>
+
+          <div class="transaction">
+            <span>واریز حقوق</span>
+            <span class="income">+۱۵,۰۰۰,۰۰۰</span>
+          </div>
+
+          <div class="transaction">
+            <span>خرید اینترنتی</span>
+            <span class="expense">-۴۵۰,۰۰۰</span>
+          </div>
+
+          <div class="transaction">
+            <span>انتقال وجه</span>
+            <span class="expense">-۲,۰۰۰,۰۰۰</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

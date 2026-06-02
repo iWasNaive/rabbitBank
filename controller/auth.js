@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
 
   const cvv2 = Math.floor(Math.random() * 900) + 100;
 
-  const hashedPass = (hashedPassword = await bcrypt.hash(password, 12));
+  const hashedPass = await bcrypt.hash(password, 12);
 
   const cardNumber = GenerateCardNumber();
 
@@ -52,8 +52,13 @@ exports.login = async (req, res) => {
     return res.json({ msg: "پسورد اشتباس" });
   }
 
-  // await loginUserAndFindCardnumber({ username, password });
-  //...
+  const cardNumber = await loginUserAndFindCardnumber(username);
+
+  res.cookie("cardnumber", cardNumber, {
+    httpOnly: true,
+  });
+
+  res.send(cardNumber);
 };
 
 exports.getUsers = async (req, res) => {
