@@ -15,8 +15,4 @@ app.use(cookieParser());
 app.use("/auth", authRoute);
 app.use("/transaction", transactionRoute);
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
 module.exports = app;
