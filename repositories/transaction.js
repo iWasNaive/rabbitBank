@@ -11,6 +11,10 @@ exports.CreateTransaction = async ({ sender_id, receiver_id, amount }) => {
     const [sender] = await connection.execute(senderIDQuery, [sender_id]);
     const [receiver] = await connection.execute(receiverIDQuery, [receiver_id]);
 
+    if (receiver.length === 0) {
+      return 700;
+    }
+
     const subtractFromSender =
       "UPDATE `accounts` SET `balance`= balance - ? WHERE cardnuber = ? and balance >= ?";
     const [senderUpdateRow] = await connection.execute(subtractFromSender, [
@@ -31,7 +35,7 @@ exports.CreateTransaction = async ({ sender_id, receiver_id, amount }) => {
     let status = "success";
     const referenceCode = Math.floor(1000 + Math.random() * 9999);
     const createTransactionTableQuery =
-      "INSERT INTO transactions VALUES (?, ?, ?, ?, ?, ?)";
+      "INSERT INTO transactions(id, sender_id, receiver_id, amount, status, referencecode) VALUES (?, ?, ?, ?, ?, ?)";
     await connection.execute(createTransactionTableQuery, [
       null,
       sender[0].id,
@@ -45,5 +49,21 @@ exports.CreateTransaction = async ({ sender_id, receiver_id, amount }) => {
   } catch (error) {
     await connection.rollback();
     throw error;
+  }
+};
+
+exports.lastTransActions = async (cardID) => {
+  const connection = await db.getConnection();
+  try {
+    const query =
+      "select * from transactions where receiver_id = ? or sender_id = ? order by created_at desc limit 3";
+
+    const [result] = await connection.execute(query, [cardID, cardID]);
+
+    return result;
+  } catch (error) {
+    throw error;
+  } finally {
+    connection.release();
   }
 };

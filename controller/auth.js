@@ -8,6 +8,10 @@ const { findAccounts } = require("../repositories/card");
 const { GenerateCardNumber } = require("../utils/GenerateCardNumber");
 const bcrypt = require("bcryptjs");
 
+exports.showregisterPage = (req, res) => {
+  res.render("register");
+};
+
 exports.register = async (req, res) => {
   const { name, username, password } = req.body;
 
@@ -34,7 +38,11 @@ exports.register = async (req, res) => {
     httpOnly: true,
   });
 
-  return res.json("ثبت نام موفق");
+  return res.redirect("/");
+};
+
+exports.showLoginPage = (req, res) => {
+  res.render("login");
 };
 
 exports.login = async (req, res) => {
@@ -58,7 +66,7 @@ exports.login = async (req, res) => {
     httpOnly: true,
   });
 
-  res.send(cardNumber);
+  return res.redirect("/");
 };
 
 exports.getUsers = async (req, res) => {

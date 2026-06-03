@@ -4,24 +4,30 @@ exports.findCardnumberByUserID = (user_id) => {};
 
 exports.findUserByCardnumber = async (cardnumber) => {
   const connection = await db.getConnection();
+  try {
+    const query = "select * from accounts where cardnuber = ?";
 
-  const query = "select * from accounts where cardnuber = ?";
+    const [account] = await connection.execute(query, [cardnumber]);
 
-  const [account] = await connection.execute(query, [cardnumber]);
+    const findQuery = "select * from users where id = ?";
 
-  const findQuery = "select * from users where id = ?";
+    const [user] = await connection.execute(findQuery, [account[0].user_id]);
 
-  const [user] = await connection.execute(findQuery, [account[0].user_id]);
-
-  return user[0];
+    return user[0];
+  } finally {
+    connection.release();
+  }
 };
 
-exports.findAccounts = async () => {
+exports.findAccounts = async (cardnumber) => {
   const connection = await db.getConnection();
+  try {
+    const query = "select * from accounts where cardnuber = ?";
 
-  const query = "select * from accounts";
+    const [result] = await connection.execute(query, [cardnumber]);
 
-  const [result] = await connection.execute(query);
-
-  return result;
+    return result[0];
+  } finally {
+    connection.release();
+  }
 };

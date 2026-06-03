@@ -5,7 +5,7 @@ exports.authMid = async (req, res, next) => {
     const { cardnumber } = req.cookies;
 
     if (!cardnumber) {
-      return res.json("باید لاگین کنید");
+      return res.render("login");
     }
 
     const user = await findUserByCardnumber(cardnumber);

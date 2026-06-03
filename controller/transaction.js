@@ -12,7 +12,9 @@ exports.transaction = async (req, res) => {
 
   if (result === 401) {
     return res.json({ msg: "موجودی نداری" });
+  } else if (result == 700) {
+    return res.json({ msg: "شماره کارت اشتباس" });
   }
 
-  return res.json({ msg: "انتقال موفق" });
+  return res.json({ msg: "انتقال با موفقیت انجام شد" });
 };

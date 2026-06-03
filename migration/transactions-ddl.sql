@@ -5,6 +5,7 @@ CREATE TABLE transactions(
     amount bigint NOT null,
     `status` enum("success", "faile"),
     referencecode int not null,
+    created_at datetime not null DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (sender_id) REFERENCES accounts(id),
     FOREIGN KEY (receiver_id) REFERENCES accounts(id)

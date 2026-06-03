@@ -181,44 +181,56 @@
   <body>
     <div class="container">
       <div class="header">
-        <h2>سلام، سید 👋</h2>
-        <p>به موبایل بانک خوش اومدی</p>
+        <h2>سلام، <%= user.name%> 👋</h2>
+        <p>به ربیت بانک خوش اومدی</p>
       </div>
 
       <div class="grid">
         <!-- موجودی -->
         <div class="card balance large">
           <span>موجودی حساب</span>
-          <h1>۱۲۵,۴۵۰,۰۰۰ تومان</h1>
+          <h1><%= account.balance%> تومان</h1>
         </div>
 
         <!-- کارت بانکی -->
         <div class="card bank-card large">
-          <div>Rabbit Bank</div>
-          <div class="number">6037 •••• •••• 9876</div>
-          <div style="margin-top: 10px; font-size: 16px">Seyed Hosseini</div>
+          <div>شماره کارت</div>
+          <div class="number"><%= account.cardnuber%></div>
         </div>
 
         <!-- انتقال وجه با فرم -->
         <div class="card large">
           <div class="title">انتقال وجه</div>
-          <form id="transferForm">
-            <input type="text" placeholder="شماره کارت مقصد" required />
-            <input type="number" placeholder="مبلغ (تومان)" required />
+          <form id="transferForm" action="/transaction/send" method="post">
+            <input
+              type="text"
+              name="receiver_id"
+              placeholder="شماره کارت مقصد"
+              required
+            />
+            <input
+              type="number"
+              name="amount"
+              placeholder="مبلغ (تومان)"
+              required
+              />
+
+
             <button type="submit" class="transfer-btn">انتقال</button>
+            
           </form>
         </div>
 
         <!-- دریافتی -->
         <div class="card">
           <div class="title">دریافتی امروز</div>
-          <div class="value income">+۲,۳۵۰,۰۰۰</div>
+          <div class="value income"><%= receive.receivesum %></div>
         </div>
 
         <!-- پرداختی -->
         <div class="card">
           <div class="title">پرداختی امروز</div>
-          <div class="value expense">-۸۵۰,۰۰۰</div>
+          <div class="value expense"><%= send.sendsum %></div>
         </div>
 
         <!-- سطح حساب -->
@@ -230,29 +242,39 @@
         <!-- صاحب حساب -->
         <div class="card">
           <div class="title">صاحب حساب</div>
-          <div class="value">سید حسینی</div>
+          <div class="value"><%= user.username%></div>
         </div>
 
         <!-- آخرین تراکنش‌ها -->
         <div class="card large">
           <div class="title">آخرین تراکنش‌ها</div>
 
-          <div class="transaction">
-            <span>واریز حقوق</span>
-            <span class="income">+۱۵,۰۰۰,۰۰۰</span>
+          <% if (lastTransaction.length == 0) { %>
+            <div class="transaction">
+            <span class="header">شما تراکنشی نداشتید تابحال</span>
           </div>
+          <% } else { %>
+            <%lastTransaction.forEach(item => { %>
+              <% if(item.sender_id == account.id){ %>
+                <div class="transaction">
+                <span>انتقال</span>
+                 <span class="expense"><%= item.amount %></span>
 
-          <div class="transaction">
-            <span>خرید اینترنتی</span>
-            <span class="expense">-۴۵۰,۰۰۰</span>
-          </div>
+                </div>
+              <% } else { %>
+                  <div class="transaction">
+                  <span>دریافتی</span>
+                  <span class="income"><%= item.amount %></span>
+                  </div>
+              <%} %>
+            <% })%>
+          <% }%>
 
-          <div class="transaction">
-            <span>انتقال وجه</span>
-            <span class="expense">-۲,۰۰۰,۰۰۰</span>
-          </div>
+          
         </div>
       </div>
     </div>
+
+
   </body>
 </html>
