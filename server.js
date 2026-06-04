@@ -3,8 +3,9 @@ const db = require("./db");
 
 (async () => {
   try {
-    await db.getConnection();
+    const connection = await db.getConnection();
     console.log("DB run");
+    connection.release();
 
     app.listen(4000, () => {
       console.log("Server Run");

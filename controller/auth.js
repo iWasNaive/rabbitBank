@@ -9,40 +9,46 @@ const { GenerateCardNumber } = require("../utils/GenerateCardNumber");
 const bcrypt = require("bcryptjs");
 
 exports.showregisterPage = (req, res) => {
-  res.render("register");
+  res.render("register", { messages: req.flash() });
 };
 
 exports.register = async (req, res) => {
-  const { name, username, password } = req.body;
+  try {
+    const { name, username, password } = req.body;
 
-  const cvv2 = Math.floor(Math.random() * 900) + 100;
+    const cvv2 = Math.floor(Math.random() * 900) + 100;
 
-  const hashedPass = await bcrypt.hash(password, 12);
+    const hashedPass = await bcrypt.hash(password, 12);
 
-  const cardNumber = GenerateCardNumber();
+    const cardNumber = GenerateCardNumber();
 
-  const date = new Date();
-  date.setFullYear(date.getFullYear() + 1);
-  const expireDate = date.toISOString().split("T")[0];
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    const expireDate = date.toISOString().split("T")[0];
 
-  const createUser = await registerUserAndCreateAccount({
-    name,
-    username,
-    password: hashedPass,
-    cvv2,
-    cardNumber,
-    expireDate,
-  });
+    const createUser = await registerUserAndCreateAccount({
+      name,
+      username,
+      password: hashedPass,
+      cvv2,
+      cardNumber,
+      expireDate,
+    });
 
-  res.cookie("cardnumber", createUser, {
-    httpOnly: true,
-  });
+    res.cookie("cardnumber", createUser, {
+      httpOnly: true,
+    });
 
-  return res.redirect("/");
+    req.flash("success", "ثبت نام موفق");
+    return res.redirect("/");
+  } catch (error) {
+    req.flash("error", "نام کاربری از قبل وجود دارد");
+    res.redirect("/auth/register");
+  }
 };
 
 exports.showLoginPage = (req, res) => {
-  res.render("login");
+  res.render("login", { messages: req.flash() });
 };
 
 exports.login = async (req, res) => {
@@ -51,13 +57,15 @@ exports.login = async (req, res) => {
   const user = await findByUsername(username);
 
   if (!user) {
-    return res.json({ msg: "یوزر وجود ندارد" });
+    req.flash("error", "نام کاربری یا رمز عبور اشتباست");
+    return res.redirect("/auth/login");
   }
 
   const pass = await bcrypt.compare(password, user.password);
 
   if (!pass) {
-    return res.json({ msg: "پسورد اشتباس" });
+    req.flash("error", "نام کاربری یا رمز عبور اشتباست");
+    return res.redirect("/auth/login");
   }
 
   const cardNumber = await loginUserAndFindCardnumber(username);
@@ -66,6 +74,7 @@ exports.login = async (req, res) => {
     httpOnly: true,
   });
 
+  req.flash("success", "خوش آمدید");
   return res.redirect("/");
 };
 

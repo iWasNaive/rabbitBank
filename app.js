@@ -3,11 +3,22 @@ const express = require("express");
 const mainPageRoute = require("./routers/mainPage");
 const authRoute = require("./routers/auth");
 const transactionRoute = require("./routers/transaction");
+const flash = require("express-flash");
+const session = require("express-session");
+
+const app = express();
 
 const cookieParser = require("cookie-parser");
 const path = require("path");
+app.use(
+  session({
+    secret: "secretKey",
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
 
-const app = express();
+app.use(flash());
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

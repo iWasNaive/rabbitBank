@@ -49,6 +49,8 @@ exports.CreateTransaction = async ({ sender_id, receiver_id, amount }) => {
   } catch (error) {
     await connection.rollback();
     throw error;
+  } finally {
+    connection.release();
   }
 };
 

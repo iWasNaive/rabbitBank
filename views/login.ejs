@@ -121,5 +121,27 @@
         <div class="login-link">حساب ندارید؟ <a href="/auth/register">بسازید</a></div>
       </div>
     </div>
+
+          <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+      <% if (messages.error && messages.error.length > 0) { %>
+    <script>
+      swal({
+        title: "<%= messages.error[0] %>",
+        icon: "error",
+        button: "تلاش مجدد",
+      });
+    </script>
+  <% } %>
+
+  <% if (messages.success && messages.success.length > 0) { %>
+    <script>
+      swal({
+        title: "<%= messages.success[0] %>",
+        icon: "success",
+        button: "باشه",
+      });
+    </script>
+  <% } %>
   </body>
 </html>

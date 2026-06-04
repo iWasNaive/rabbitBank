@@ -43,16 +43,29 @@ exports.registerUserAndCreateAccount = async ({
     return userCard;
   } catch (error) {
     await connection.rollback();
+    if (error.code === "ER_DUP_ENTRY") {
+      if (error.message.includes("username")) {
+        throw new Error("خطای داپلیکیت");
+      }
+    }
     throw error;
+  } finally {
+    connection.release();
   }
 };
 
 exports.findByUsername = async (username) => {
   const connection = await db.getConnection();
-  const findQuery = "select * from users where username = ?";
-  const [user] = await connection.execute(findQuery, [username]);
+  try {
+    const findQuery = "select * from users where username = ?";
+    const [user] = await connection.execute(findQuery, [username]);
 
-  return user[0];
+    return user[0];
+  } catch (err) {
+    throw err;
+  } finally {
+    connection.release();
+  }
 };
 
 exports.findUsers = async () => {
@@ -66,14 +79,19 @@ exports.findUsers = async () => {
 
 exports.loginUserAndFindCardnumber = async (username) => {
   const connection = await db.getConnection();
+  try {
+    const findQuery = "select * from users where username = ?";
 
-  const findQuery = "select * from users where username = ?";
+    const [user] = await connection.execute(findQuery, [username]);
 
-  const [user] = await connection.execute(findQuery, [username]);
+    const cardnumberQuery = "select * from accounts where user_id = ?";
 
-  const cardnumberQuery = "select * from accounts where user_id = ?";
+    const [account] = await connection.execute(cardnumberQuery, [user[0].id]);
 
-  const [account] = await connection.execute(cardnumberQuery, [user[0].id]);
-
-  return account[0].cardnuber;
+    return account[0].cardnuber;
+  } catch (error) {
+    throw error;
+  } finally {
+    connection.release();
+  }
 };

@@ -5,16 +5,20 @@ exports.transaction = async (req, res) => {
   const { receiver_id, amount } = req.body;
 
   if (sender_id === receiver_id) {
-    return res.json({ msg: "شما نمیتونی به خودت پول بزنی" });
+    req.flash("error", "شما نمیتونی به خودت پول بزنی");
+    return res.redirect("/");
   }
 
   const result = await CreateTransaction({ sender_id, receiver_id, amount });
 
   if (result === 401) {
-    return res.json({ msg: "موجودی نداری" });
+    req.flash("error", "موجودی نداری");
+    return res.redirect("/");
   } else if (result == 700) {
-    return res.json({ msg: "شماره کارت اشتباس" });
+    req.flash("error", "شماره کارت اشتباس");
+    return res.redirect("/");
   }
 
-  return res.json({ msg: "انتقال با موفقیت انجام شد" });
+  req.flash("success", "انتقال وجه موفق");
+  return res.redirect("/");
 };
